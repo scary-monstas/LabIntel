@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Intel | Wellness Evolved</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        'brand-dark': '#1c1917', // Stone 900
+                        'brand-pink': '#fff1f2', // Rose 50
+                        'brand-accent': '#f43f5e', // Rose 500
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .prose h1 { font-family: 'Playfair Display', serif; color: #1c1917; margin-top: 1.0rem; font-size: 1.5rem; }
+        .prose h2 { font-family: 'Manrope', sans-serif; font-weight: 700; color: #1c1917; margin-top: 1.5rem; border-bottom: 2px solid #ffe4e6; padding-bottom: 0.5rem; font-size: 1.25rem; }
+        .prose strong { color: #be123c; } 
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; }
+        .prose li { margin-bottom: 0.5rem; color: #44403c; }
+        .prose p { margin-bottom: 0.8rem; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Chat Bubbles */
+        .bubble-ai { background: white; border: 1px solid #e7e5e4; border-radius: 0px 20px 20px 20px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        .bubble-user { background: #ffe4e6; color: #881337; border-radius: 20px 0px 20px 20px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#fff1f2] via-[#fff] to-[#fce7f3] text-stone-800 min-h-screen font-sans selection:bg-rose-200">
+
+    <nav class="absolute top-0 w-full z-50 p-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tight font-serif text-brand-dark">
+                Lab<span class="text-rose-500">Intel</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-stone-600">
+                <a href="#" class="hover:text-rose-500 transition-colors">Home</a>
+                <a href="#" class="hover:text-rose-500 transition-colors">Methodology</a>
+            </div>
+            <button class="bg-brand-dark text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-stone-700 transition-all shadow-lg shadow-stone-200">
+                Contact Expert
+            </button>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[90vh]">
+        <div class="space-y-8 animate-fade-in">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-rose-100 shadow-sm text-xs font-semibold text-rose-600 mb-2">
+                <span class="flex h-2 w-2 rounded-full bg-rose-500"></span>
+                Trusted by 10k+ Wellness Seekers
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-serif font-medium leading-tight text-brand-dark">
+                Reclaim Your <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-400">Vitality</span> & Health.
+            </h1>
+            <p class="text-lg text-stone-500 leading-relaxed max-w-lg">
+                Stop guessing. Upload your lab reports and let our <strong>Chocolate</strong> translate complex medical data into actionable wellness plans.
+            </p>
+
+            <div class="glass-panel p-6 rounded-3xl shadow-xl shadow-rose-100/50 mt-8 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-100">
+                <div id="dropZone" class="border-2 border-dashed border-rose-200 rounded-2xl p-8 text-center cursor-pointer hover:bg-white hover:border-rose-400 transition-all group relative">
+                    <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+                    <div id="uploadPrompt">
+                        <div class="w-14 h-14 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-arrow-up-from-bracket text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-medium text-stone-800">Upload Lab Report</h3>
+                        <p class="text-sm text-stone-400 mt-1">Supports JPG, PNG (Max 5MB)</p>
+                    </div>
+                    <div id="previewContainer" class="hidden relative">
+                        <img id="imagePreview" class="h-48 mx-auto rounded-lg object-contain shadow-sm" />
+                        <div class="mt-4 text-sm text-rose-500 font-medium">Click to change image</div>
+                    </div>
+                </div>
+                <button id="analyzeBtn" disabled class="w-full mt-4 bg-brand-dark text-white font-medium py-4 rounded-full shadow-lg hover:shadow-xl hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 text-lg">
+                    Generate Wellness Plan
+                </button>
+            </div>
+        </div>
+        <div class="hidden lg:block relative h-full min-h-[600px] animate-fade-in" style="animation-delay: 0.2s">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-200 rounded-full blur-3xl opacity-30"></div>
+            <div class="relative z-10 h-full w-full rounded-[3rem] overflow-hidden shadow-2xl shadow-rose-200/50">
+                <img src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700">
+            </div>
+        </div>
+    </main>
+
+    <!-- Chat/Results Modal -->
+    <section id="resultsSection" class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-4xl h-[85vh] overflow-hidden shadow-2xl flex flex-col relative animate-fade-in">
+            
+            <!-- Header -->
+            <div class="p-6 border-b border-stone-100 flex justify-between items-center bg-rose-50/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-500">
+                        <i class="fa-solid fa-user-doctor text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-serif font-bold text-brand-dark">Dactar Babu</h2>
+                        <div class="text-xs text-stone-500 flex items-center gap-1">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Online • Gemini 2.5 Flash
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-100 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Chat Area -->
+            <div id="chatContainer" class="flex-grow overflow-y-auto p-6 space-y-6 bg-stone-50">
+                <!-- Loading Animation (Initially Hidden) -->
+                <div id="loadingBubble" class="hidden flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-rose-100 flex-shrink-0 flex items-center justify-center text-rose-500"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="bubble-ai p-4 flex items-center gap-2">
+                        <div class="w-2 h-2 bg-rose-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-rose-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-rose-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white border-t border-stone-100">
+                <form id="chatForm" class="relative flex items-center gap-2">
+                    <input type="text" id="chatInput" disabled placeholder="Ask a follow-up question about your results..." 
+                        class="w-full bg-stone-100 text-stone-800 border-none rounded-full py-4 pl-6 pr-14 focus:ring-2 focus:ring-rose-200 focus:bg-white transition-all outline-none disabled:opacity-50">
+                    <button type="submit" id="sendBtn" disabled 
+                        class="absolute right-2 bg-brand-dark text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-rose-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </form>
+                <div class="text-center mt-2">
+                     <p class="text-[10px] text-stone-400 uppercase tracking-wider">AI Medical Intelligence • Not a Diagnosis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- CONFIGURATION ---
+        const API_KEY = "AIzaSyDXoeHalbDYa0rZUjD5GjOP5uoMDbq_qa8";
+        // Strict URL as requested
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+        // State
+        let selectedFile = null;
+        let chatHistory = []; // Stores the conversation history
+
+        // DOM Elements
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const chatContainer = document.getElementById('chatContainer');
+        const loadingBubble = document.getElementById('loadingBubble');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // --- File Handling ---
+        fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('bg-rose-50'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('bg-rose-50'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('bg-rose-50'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+        function handleFile(file) {
+            if(file.size > 5 * 1024 * 1024) return alert("File too large (Max 5MB)");
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                uploadPrompt.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+                analyzeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                analyzeBtn.innerHTML = `Analyze Report <i class="fa-solid fa-arrow-right ml-2"></i>`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Main Analysis Logic ---
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            // Open Modal
+            resultsSection.classList.remove('hidden');
+            chatContainer.innerHTML = ''; // Clear previous chat
+            chatContainer.appendChild(loadingBubble); // Add loader back (it was cleared)
+            setLoading(true);
+
+            try {
+                const base64Data = await getBase64(selectedFile);
+                const cleanBase64 = base64Data.split(',')[1];
+                
+                // Initial Prompt
+                const prompt = `
+                    You are a functional medicine expert "Lab Intel".
+                    Analyze this medical lab report image.
+                    
+                    ## 🩺 Executive Summary
+                    (2 sentences on overall health status)
+
+                    ## ⚠️ Key Findings & Markers
+                    * List abnormal values (High/Low).
+                    * Format: **Marker**: Value (Ref Range) - *Status*
+
+                    ## 🌱 Action Plan
+                    * **Foods to Eat**: Specifics.
+                    * **Foods to Avoid**: Specifics.
+                    * **Lifestyle**: Sleep/Exercise tips.
+                `;
+
+                // Prepare History for API
+                // We add the image ONLY to the first user message
+                const userMessage = {
+                    role: "user",
+                    parts: [
+                        { text: prompt }, 
+                        { inline_data: { mime_type: selectedFile.type, data: cleanBase64 } }
+                    ]
+                };
+
+                chatHistory = [userMessage]; // Start history
+
+                // API Call
+                const data = await callGemini(chatHistory);
+                const aiText = data.candidates[0].content.parts[0].text;
+
+                // Add AI response to history
+                chatHistory.push({
+                    role: "model",
+                    parts: [{ text: aiText }]
+                });
+
+                // Render Result
+                appendMessage("ai", aiText);
+                
+                // Enable Chat
+                setLoading(false);
+
+            } catch (err) {
+                setLoading(false);
+                appendMessage("ai", `**Error:** ${err.message}. Please try again.`);
+            }
+        });
+
+        // --- Follow-Up Chat Logic ---
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const question = chatInput.value.trim();
+            if(!question) return;
+
+            // Render User Message
+            appendMessage("user", question);
+            chatInput.value = '';
+            setLoading(true);
+
+            // Update History
+            chatHistory.push({
+                role: "user",
+                parts: [{ text: question }]
+            });
+
+            try {
+                // Call API with Full History
+                const data = await callGemini(chatHistory);
+                const aiResponse = data.candidates[0].content.parts[0].text;
+
+                // Update History & Render
+                chatHistory.push({
+                    role: "model",
+                    parts: [{ text: aiResponse }]
+                });
+                appendMessage("ai", aiResponse);
+
+            } catch (err) {
+                appendMessage("ai", `**Error:** ${err.message}`);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // --- Helper Functions ---
+        
+        async function callGemini(contents) {
+            const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: contents })
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error.message);
+            return data;
+        }
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `flex gap-3 ${role === 'user' ? 'justify-end' : ''} animate-fade-in`;
+            
+            let html = '';
+            if (role === 'ai') {
+                html = `
+                    <div class="w-8 h-8 rounded-full bg-rose-100 flex-shrink-0 flex items-center justify-center text-rose-500 mt-1">
+                        <i class="fa-solid fa-user-doctor text-sm"></i>
+                    </div>
+                    <div class="bubble-ai p-5 text-sm leading-relaxed prose prose-stone max-w-[85%]">
+                        ${marked.parse(text)}
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="bubble-user px-5 py-3 text-sm max-w-[80%] shadow-sm">
+                        ${text}
+                    </div>
+                `;
+            }
+            div.innerHTML = html;
+            
+            // Remove loader if exists, append message, re-append loader (hidden) to stay at bottom
+            loadingBubble.classList.add('hidden');
+            chatContainer.insertBefore(div, loadingBubble);
+            chatContainer.appendChild(loadingBubble); // Move loader to very bottom
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function setLoading(isLoading) {
+            chatInput.disabled = isLoading;
+            sendBtn.disabled = isLoading;
+            if(isLoading) {
+                loadingBubble.classList.remove('hidden');
+                loadingBubble.classList.add('flex');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            } else {
+                loadingBubble.classList.add('hidden');
+                loadingBubble.classList.remove('flex');
+                chatInput.focus();
+            }
+        }
+
+        function closeModal() { resultsSection.classList.add('hidden'); }
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
+        });
+
+    </script>
+</body>
+</html>
